@@ -1,0 +1,30 @@
+`timescale 1ns / 1ps
+module tb_PulseTracer;
+
+reg clk, rst, noisy_in;
+wire pulse_out;
+
+PulseTracer uut(.clk(clk), .rst(rst), .noisy_in(noisy_in), .pulse_out(pulse_out));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_PulseTracer);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; noisy_in = 0;
+    #20 rst = 0;
+
+    #5 noisy_in = 1; #5 noisy_in = 0;
+    #5 noisy_in = 1; #10 noisy_in = 0;
+
+    #20 noisy_in = 1; #10 noisy_in = 0;
+
+    #20 noisy_in = 1; #10 noisy_in = 0;
+
+    #30 $finish;
+end
+
+endmodule
