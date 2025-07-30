@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+module tb_EvenOddFSM;
+
+reg clk, rst;
+reg [3:0] num;
+wire is_even;
+
+EvenOddFSM uut(.clk(clk), .rst(rst), .num(num), .is_even(is_even));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_EvenOddFSM);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; num = 0; #10 rst = 0;
+    #10 num = 4;
+    #10 num = 5;
+    #10 num = 6;
+    #10 num = 7;
+    #10 num = 2;
+    #10 $finish;
+end
+
+endmodule
