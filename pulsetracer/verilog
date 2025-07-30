@@ -1,0 +1,27 @@
+module PulseTracer(
+    input wire clk,
+    input wire rst,
+    input wire noisy_in,
+    output reg pulse_out
+);
+
+reg noisy_in_d1, noisy_in_d2;
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        noisy_in_d1 <= 0;
+        noisy_in_d2 <= 0;
+    end else begin
+        noisy_in_d1 <= noisy_in;
+        noisy_in_d2 <= noisy_in_d1;
+    end
+end
+
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        pulse_out <= 0;
+    else
+        pulse_out <= (noisy_in_d1 & ~noisy_in_d2);
+end
+
+endmodule
