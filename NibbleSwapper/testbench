@@ -1,0 +1,22 @@
+`timescale 1ns / 1ps
+module tb_NibbleSwapper;
+
+reg [7:0] data_in;
+reg swap;
+wire [7:0] data_out;
+
+NibbleSwapper uut(.data_in(data_in), .swap(swap), .data_out(data_out));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_NibbleSwapper);
+end
+
+initial begin
+    data_in = 8'hAB; swap = 0; #10;
+    swap = 1; #10;
+    swap = 0; #10;
+    $finish;
+end
+
+endmodule
