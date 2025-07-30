@@ -1,0 +1,22 @@
+`timescale 1ns / 1ps
+module tb_LightChaser;
+
+reg clk, rst, enable;
+wire [7:0] led;
+
+LightChaser uut(.clk(clk), .rst(rst), .enable(enable), .led(led));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_LightChaser);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; enable = 0; #10 rst = 0; enable = 1;
+    repeat (16) #10;
+    $finish;
+end
+
+endmodule
