@@ -1,0 +1,15 @@
+module LightChaser(
+    input wire clk,
+    input wire rst,
+    input wire enable,
+    output reg [7:0] led
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        led <= 8'b00000001;
+    else if (enable)
+        led <= (led << 1) | (led[7] ? 1'b1 : 1'b0);
+end
+
+endmodule
