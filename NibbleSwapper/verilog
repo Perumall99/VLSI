@@ -1,0 +1,14 @@
+module NibbleSwapper(
+    input wire [7:0] data_in,
+    input wire swap,
+    output reg [7:0] data_out
+);
+
+always @(*) begin
+    if (swap)
+        data_out = {data_in[3:0], data_in[7:4]};
+    else
+        data_out = data_in;
+end
+
+endmodule
