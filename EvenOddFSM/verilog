@@ -1,0 +1,15 @@
+module EvenOddFSM(
+    input wire clk,
+    input wire rst,
+    input wire [3:0] num,
+    output reg is_even
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        is_even <= 1;
+    else
+        is_even <= ~num[0];
+end
+
+endmodule
