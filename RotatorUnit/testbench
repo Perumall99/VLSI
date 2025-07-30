@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+module tb_RotatorUnit;
+
+reg clk, rst, dir;
+reg [7:0] data_in;
+wire [7:0] data_out;
+
+RotatorUnit uut(.clk(clk), .rst(rst), .dir(dir), .data_in(data_in), .data_out(data_out));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_RotatorUnit);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; dir = 0; data_in = 8'b10110011; #10 rst = 0;
+
+    #10 dir = 0; // rotate left
+    #10;
+    #10 dir = 1; // rotate right
+    #10;
+    #20 $finish;
+end
+
+endmodule
