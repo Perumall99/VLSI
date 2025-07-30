@@ -1,0 +1,27 @@
+module EdgeHighlighter(
+    input clk,          // Clock input
+    input rst,          // Active-high reset
+    input sig_in,       // Input signal to monitor
+    output reg rise_pulse,  // High for 1 clock cycle on rising edge of sig_in
+    output reg fall_pulse   // High for 1 clock cycle on falling edge of sig_in
+);
+
+    reg prev_sig;       // Holds previous cycle's value of sig_in for edge detection
+
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            prev_sig <= 0;
+            rise_pulse <= 0;
+            fall_pulse <= 0;
+        end else begin
+            // Rising edge: previous was 0, now 1
+            rise_pulse <= (~prev_sig & sig_in);
+
+            // Falling edge: previous was 1, now 0
+            fall_pulse <= (prev_sig & ~sig_in);
+
+            // Save current input for next cycle comparison
+            prev_sig <= sig_in;
+        end
+    end
+endmodule
