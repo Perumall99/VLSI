@@ -1,0 +1,41 @@
+`timescale 1ns/1ps
+module EdgeHighlighter_tb;
+
+    reg clk, rst, sig_in;
+    wire rise_pulse, fall_pulse;
+
+    // Instantiate DUT
+    EdgeHighlighter uut (.clk(clk), .rst(rst), .sig_in(sig_in), .rise_pulse(rise_pulse), .fall_pulse(fall_pulse));
+
+    // Dump waveforms for EPWave
+    initial begin
+        $dumpfile("EdgeHighlighter.vcd");
+        $dumpvars(0);   // 
+    end
+
+    // Clock generation: 10ns period
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+
+    // Print on every change
+    initial begin
+        $monitor("Time=%0t | sig_in=%b | rise_pulse=%b | fall_pulse=%b", $time, sig_in, rise_pulse, fall_pulse);
+    end
+
+    // Stimulus
+    initial begin
+        rst = 1; sig_in = 0; #10;
+        rst = 0;
+
+        sig_in = 1; #10;   // Rising edge → rise_pulse should assert
+        sig_in = 0; #10;   // Falling edge → fall_pulse should assert
+        sig_in = 1; #10;   // Another rising edge
+        sig_in = 1; #10;   // No edge (no pulse)
+        sig_in = 0; #10;   // Another falling edge
+        #50;
+        $finish;
+    end
+endmodule
+
