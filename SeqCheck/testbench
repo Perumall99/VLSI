@@ -1,0 +1,29 @@
+`timescale 1ns / 1ps
+module tb_SeqCheck;
+
+reg clk, rst, in_sig;
+wire detected;
+
+SeqCheck uut(.clk(clk), .rst(rst), .in_sig(in_sig), .detected(detected));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_SeqCheck);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; in_sig = 0; #10 rst = 0;
+
+    #10 in_sig = 0;
+    #10 in_sig = 1;
+    #10 in_sig = 1; // should detect "011"
+    #10 in_sig = 0;
+    #10 in_sig = 1;
+    #10 in_sig = 1;
+
+    #20 $finish;
+end
+
+endmodule
