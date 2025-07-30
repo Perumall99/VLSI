@@ -1,0 +1,28 @@
+`timescale 1ns / 1ps
+module tb_DebouncerLite;
+
+reg clk, rst, noisy_in;
+wire clean_out;
+
+DebouncerLite uut(.clk(clk), .rst(rst), .noisy_in(noisy_in), .clean_out(clean_out));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_DebouncerLite);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; noisy_in = 0; #10 rst = 0;
+
+    #10 noisy_in = 1;  // glitch start
+    #5  noisy_in = 0;
+    #5  noisy_in = 1;
+    #15 noisy_in = 1;  // stable
+    #20 noisy_in = 0;  // release
+
+    #20 $finish;
+end
+
+endmodule
