@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+module tb_BitBalancer;
+
+reg clk, rst;
+reg [7:0] data_in;
+wire [3:0] count;
+
+BitBalancer uut(.clk(clk), .rst(rst), .data_in(data_in), .count(count));
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb_BitBalancer);
+end
+
+initial begin clk = 0; forever #5 clk = ~clk; end
+
+initial begin
+    rst = 1; data_in = 0; #10 rst = 0;
+    #10 data_in = 8'b10101010;
+    #10 data_in = 8'b11110000;
+    #10 data_in = 8'b00001111;
+    #10 data_in = 8'b11111111;
+    #10 data_in = 8'b00000000;
+    #20 $finish;
+end
+
+endmodule
